@@ -1,0 +1,6 @@
+/client
+/k8s
+/vendor
+Makefile
+.gitignore
+.DS_Store

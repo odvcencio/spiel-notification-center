@@ -1,0 +1,18 @@
+# Ignore all
+*
+
+# Unignore all with extensions
+!*.*
+
+# Unignore all dirs
+!*/
+
+# Unignore make file and docker file
+!Makefile
+!Dockerfile
+
+.vscode
+.DS_Store
+bin/
+.env
+/vendor
