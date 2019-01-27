@@ -51,8 +51,9 @@ func (c *Client) RegisterMediaWebhook(baseURL string) (relativePath, absoluteURL
 	if err != nil {
 		return "", "", err
 	}
-	httpReq.Header.Add("X-Auth-Key", c.APIKey)
-	httpReq.Header.Add("X-Auth-Email", c.Email)
+	httpReq.Header.Set("Content-Type", "application/json")
+	httpReq.Header.Set("X-Auth-Email", c.Email)
+	httpReq.Header.Set("X-Auth-Key", c.APIKey)
 
 	// Perform the request
 	httpResp, err := c.httpClient.Do(httpReq)
