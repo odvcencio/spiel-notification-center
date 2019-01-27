@@ -1,13 +1,26 @@
 FROM golang:1.9-alpine as builder
+
+# Installing dependencies
+RUN apk add --no-cache \
+      git \
+      ca-certificates \
+      curl \
+      tzdata
+
+# Downloading dep
+RUN curl -sSL \
+         -o $GOPATH/bin/dep \
+         https://github.com/golang/dep/releases/download/v0.5.0/dep-linux-amd64 \
+ && chmod +x $GOPATH/bin/dep
+
+# Setting work directory
 WORKDIR /go/src/spiel/notification-center
-RUN apk update && apk add git && apk add ca-certificates && apk add --no-cache curl
-RUN apk --no-cache add tzdata
-RUN curl -L -s https://github.com/golang/dep/releases/download/v0.5.0/dep-linux-amd64 -o $GOPATH/bin/dep
-RUN chmod +x $GOPATH/bin/dep
-COPY Gopkg.toml Gopkg.lock ./
-RUN dep ensure -vendor-only
+
+# Populating vendor directory and building
+# COPY Gopkg.toml Gopkg.lock ./
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o ./notification-center
+RUN dep ensure -vendor-only \
+ && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o ./notification-center
 
 FROM scratch
 COPY --from=builder /go/src/spiel/notification-center/notification-center ./notification-center
