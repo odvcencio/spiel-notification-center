@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	server.CreateAndListen()
+	server.WaitForMessages()
 }

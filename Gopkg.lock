@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  branch = "master"
+  digest = "1:4a0c6bb4805508a6287675fac876be2ac1182539ca8a32468d8128882e9d5009"
+  name = "github.com/golang/snappy"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "2e65f85255dbc3072edf28d6b5b8efc472979f5a"
+
+[[projects]]
   digest = "1:0b0e8b69ec051f6ac1c839b6fcd0bbf34496ee39d6b348f9486f42464ed1401d"
   name = "github.com/labstack/echo"
   packages = ["."]
@@ -35,6 +43,14 @@
   pruneopts = "UT"
   revision = "6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c"
   version = "v0.0.4"
+
+[[projects]]
+  digest = "1:bb48459ec76efe45f13094480296462ef5c9aaa56662918819b7a8fce3155b8b"
+  name = "github.com/nsqio/go-nsq"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "eee57a3ac4174c55924125bb15eeeda8cffb6e6f"
+  version = "v1.0.7"
 
 [[projects]]
   digest = "1:2e76a73cb51f42d63a2a1a85b3dc5731fd4faf6821b434bd0ef2c099186031d6"
@@ -115,6 +131,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/labstack/echo",
+    "github.com/nsqio/go-nsq",
     "github.com/rs/xid",
     "go.uber.org/zap",
     "go.uber.org/zap/zapcore",
