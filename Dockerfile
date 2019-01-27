@@ -17,12 +17,13 @@ RUN curl -sSL \
 WORKDIR /go/src/spiel/notification-center
 
 # Populating vendor directory and building
-COPY Gopkg.toml Gopkg.lock ./
-RUN dep ensure -vendor-only
+# COPY Gopkg.toml Gopkg.lock ./
+# RUN dep ensure -vendor-only
 
-# Copying rest of the code and building
+# Copying rest of the code, populating dependencies and building
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o ./notification-center
+RUN dep ensure \
+ && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o ./notification-center
 
 FROM scratch
 COPY --from=builder /go/src/spiel/notification-center/notification-center ./notification-center
