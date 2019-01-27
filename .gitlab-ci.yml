@@ -1,0 +1,47 @@
+stages:
+  - build
+
+build master:
+  stage: build
+  only:
+    - master
+  image: "docker:git"
+  services:
+    - docker:dind
+  variables:
+    CONTAINER_RELEASE_IMAGE: $CI_REGISTRY/spiel/notification-center:latest
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build --force-rm --tag $CONTAINER_RELEASE_IMAGE .
+    - docker push $CONTAINER_RELEASE_IMAGE
+    - docker rmi $CONTAINER_RELEASE_IMAGE
+
+build develop:
+  stage: build
+  only:
+    - develop
+  image: "docker:git"
+  services:
+    - docker:dind
+  variables:
+    CONTAINER_RELEASE_IMAGE: $CI_REGISTRY/spiel/notification-center:dev
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build --force-rm --tag $CONTAINER_RELEASE_IMAGE .
+    - docker push $CONTAINER_RELEASE_IMAGE
+    - docker rmi $CONTAINER_RELEASE_IMAGE
+
+# build tags:
+#   stage: build
+#   only:
+#     - tags
+#   image: "docker:git"
+#   services:
+#     - docker:dind
+#   variables:
+#     CONTAINER_RELEASE_IMAGE: $CI_REGISTRY/spiel/notification-center:$CI_COMMIT_TAG
+#   script:
+#     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+#     - docker build --force-rm --tag $CONTAINER_RELEASE_IMAGE .
+#     - docker push $CONTAINER_RELEASE_IMAGE
+#     - docker rmi $CONTAINER_RELEASE_IMAGE
