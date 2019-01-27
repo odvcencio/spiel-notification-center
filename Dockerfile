@@ -7,23 +7,19 @@ RUN apk add --no-cache \
       curl \
       tzdata
 
-# Downloading dep
-RUN curl -sSL \
-         -o $GOPATH/bin/dep \
-         https://github.com/golang/dep/releases/download/v0.5.0/dep-linux-amd64 \
- && chmod +x $GOPATH/bin/dep
+# Installing dep
+RUN curl -sSL https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
 # Setting work directory
-WORKDIR /go/src/spiel/notification-center
+WORKDIR ${GOPATH}/src/spiel/notification-center
 
 # Populating vendor directory and building
-# COPY Gopkg.toml Gopkg.lock ./
-# RUN dep ensure -vendor-only
+COPY Gopkg.toml Gopkg.lock ./
+RUN dep ensure -vendor-only
 
-# Copying rest of the code, populating dependencies and building
+# Copying rest of the code and building
 COPY . .
-RUN dep ensure \
- && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o ./notification-center
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o ./notification-center
 
 FROM scratch
 COPY --from=builder /go/src/spiel/notification-center/notification-center ./notification-center
