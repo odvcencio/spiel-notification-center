@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"spiel/notification-center/messaging"
 	"sync"
 
@@ -29,12 +28,10 @@ func WaitForMessages() {
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 
+	// Topic: Question To User
 	messaging.GetConsumer(
-		messaging.TopicQuestionFromUser,
-		nsq.HandlerFunc(func(message *nsq.Message) error {
-			fmt.Println(string(message.Body))
-			return nil
-		}),
+		messaging.TopicQuestionToUser,
+		nsq.HandlerFunc(handleTopicQuestionToUser),
 	)
 
 	// Blocking main thread

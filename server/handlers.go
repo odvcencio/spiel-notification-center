@@ -2,11 +2,13 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"time"
 
 	"github.com/labstack/echo"
+	"github.com/nsqio/go-nsq"
 )
 
 func handleCloudFlareMediaNotification(ctx echo.Context) error {
@@ -45,5 +47,10 @@ func handleCloudFlareMediaNotification(ctx echo.Context) error {
 	// Responsing with OK
 	ctx.NoContent(200)
 
+	return nil
+}
+
+func handleTopicQuestionToUser(message *nsq.Message) error {
+	fmt.Println(string(message.Body))
 	return nil
 }
