@@ -35,10 +35,10 @@ func GetConsumer(topic string, handlers ...nsq.Handler) (*nsq.Consumer, error) {
 	}
 
 	// Connecting to nsqlookupd
-	if err := q.ConnectToNSQD(os.Getenv("NSQD_HOST") + ":" + os.Getenv("NSQD_PORT")); err != nil {
+	if err := q.ConnectToNSQLookupd(os.Getenv("NSQLOOKUPD_HOST") + ":" + os.Getenv("NSQLOOKUPD_PORT")); err != nil {
 		return nil, err
 	}
-	log.Println("connected to nsqd successfully")
+	log.Println("connected to nsqlookupd successfully")
 
 	// Saving consumer
 	consumers[topic] = q
