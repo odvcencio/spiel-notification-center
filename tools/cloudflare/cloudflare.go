@@ -3,6 +3,7 @@ package cloudflare
 import (
 	"fmt"
 	"net/http"
+	"os"
 )
 
 // A Credentials contains required authentication credentials
@@ -17,6 +18,13 @@ type Client struct {
 	Credentials
 	httpClient *http.Client
 }
+
+// DefaultClient is the default CloudFlare client
+var DefaultClient = NewClient(
+	os.Getenv("CLOUDFLARE_ACCOUNT_ID"),
+	os.Getenv("CLOUDFLARE_EMAIL"),
+	os.Getenv("CLOUDFLARE_API_KEY"),
+)
 
 // An GeneralError cotains a code and a message
 type GeneralError struct {

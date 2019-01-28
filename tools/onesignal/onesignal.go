@@ -1,6 +1,9 @@
 package onesignal
 
-import "net/http"
+import (
+	"net/http"
+	"os"
+)
 
 // A Credentials contains required authentication credentials
 type Credentials struct {
@@ -13,6 +16,12 @@ type Client struct {
 	Credentials
 	httpClient *http.Client
 }
+
+// DefaultClient is the default OneSignal client
+var DefaultClient = NewClient(
+	os.Getenv("ONESIGNAL_APP_ID"),
+	os.Getenv("ONESIGNAL_API_KEY"),
+)
 
 // NewClient creates new OneSignal client
 func NewClient(appID, apiKey string) *Client {
