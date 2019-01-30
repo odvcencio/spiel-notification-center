@@ -30,3 +30,22 @@ func GetQuestionByID(questionID int) (models.Question, error) {
 
 	return question, nil
 }
+
+func UpdateSpielWithVideoURL(videoURL, videoID string) error {
+	spiel := models.Spiel{
+		VideoID:  videoID,
+		VideoURL: videoURL,
+	}
+
+	db = connectToDB()
+	_, err := db.Model(&spiel).
+		Set("video_url = ?", videoURL).
+		Where("video_id = ?", videoID).
+		Update()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -82,15 +82,15 @@ type AskUser struct {
 }
 
 type Spiel struct {
-	User          User     `json:"spieler" sql:",fk"`
-	UserID        string   `json:"-"`
-	VideoURL      string   `json:"video_url"`
-	VideoUploadID string   `json:"-"`
-	Question      Question `json:"question" sql:",fk"`
-	QuestionID    int      `json:"-"`
-	Category      Category `json:"category" sql:",fk"`
-	CategoryID    int      `json:"-"`
-	ID            int      `json:"id"`
+	User       User     `json:"spieler" sql:",fk"`
+	UserID     string   `json:"-"`
+	VideoURL   string   `json:"video_url"`
+	VideoID    string   `json:"-"`
+	Question   Question `json:"question" sql:",fk"`
+	QuestionID int      `json:"-"`
+	Category   Category `json:"category" sql:",fk"`
+	CategoryID int      `json:"-"`
+	ID         int      `json:"id"`
 }
 
 type Notification struct {

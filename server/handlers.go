@@ -36,9 +36,12 @@ func handleMuxMediaNotification(ctx echo.Context) error {
 		return err
 	}
 
+	log.Println(req)
+
 	// TODO: Create appropriate Spiel and connect it to
 	//       appropriate User and Question
 
+	//database.UpdateSpielWithVideoURL(req.ID, videoID)
 	// Responsing with OK
 	ctx.NoContent(200)
 
