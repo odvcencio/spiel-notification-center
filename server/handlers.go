@@ -14,12 +14,13 @@ import (
 
 func handleMuxMediaNotification(ctx echo.Context) error {
 	type Request struct {
-		Type   string `json:"type"`
-		ID     string `json:"id"`
-		Object struct {
-			Type string `json:"type"`
-			ID   string `json:"id"`
-		} `json:"object"`
+		Type string `json:"type"`
+		ID   string `json:"id"`
+		Data struct {
+			PlaybackIDs []struct {
+				ID string `json:"id"`
+			} `json:"playback_ids"`
+		} `json:"data"`
 		CreatedAt time.Time `json:"created_at"`
 	}
 	// Read request body

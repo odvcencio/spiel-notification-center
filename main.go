@@ -3,5 +3,6 @@ package main
 import "spiel/notification-center/server"
 
 func main() {
-	server.WaitForMessages()
+	server.CreateAndListen()
+	//go server.WaitForMessages()
 }
