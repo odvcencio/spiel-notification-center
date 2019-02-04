@@ -28,13 +28,13 @@ func handleMuxMediaNotification(ctx echo.Context) error {
 	}
 
 	// Unmarshal request json
-	var req Request
-	if err := json.Unmarshal(reqData, &req); err != nil {
+	var dict echo.Map
+	if err := json.Unmarshal(reqData, &dict); err != nil {
 		println(err)
 		return err
 	}
 
-	log.Println(req)
+	log.Println(dict)
 
 	// TODO: Create appropriate Spiel and connect it to
 	//       appropriate User and Question
