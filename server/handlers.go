@@ -39,11 +39,11 @@ func handleMuxMediaNotification(ctx echo.Context) error {
 	webhookType := dict["type"].(string)
 
 	if webhookType == "video.asset.ready" {
-		videoID := dict["object"].(echo.Map)["id"].(string)
+		videoID := dict["object"].(map[string]interface{})["id"].(string)
 
-		dataMap := dict["data"].(echo.Map)
-		playbackIDArray := dataMap["playback_ids"].([]echo.Map)
-		playbackIDObject := playbackIDArray[0]
+		dataMap := dict["data"].(map[string]interface{})
+		playbackIDArray := dataMap["playback_ids"].([]interface{})
+		playbackIDObject := playbackIDArray[0].(map[string]interface{})
 		playbackID := playbackIDObject["id"].(string)
 
 		videoURL := fmt.Sprintf("https://stream.mux.com/%s.m3u8", playbackID)
