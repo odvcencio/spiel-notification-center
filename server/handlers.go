@@ -48,20 +48,22 @@ func handleMuxMediaNotification(ctx echo.Context) error {
 
 		videoURL := fmt.Sprintf("https://stream.mux.com/%s.m3u8", playbackID)
 
-		log.Println(videoURL)
-
-		videoIDExists, err := database.CheckForSpiel(videoID)
+		spiel, err := database.CheckForSpiel(videoID)
 		if err != nil {
 			log.Println(err)
 		}
 
-		if videoIDExists {
-			if err := database.UpdateSpielWithVideoURL(videoID, videoURL); err != nil {
-				log.Println(err)
-			}
+		spiel.VideoURL = videoURL
+		spiel.CreatedTime = time.Now()
 
-			return nil
+		if err := database.UpdateSpielWithVideoURL(spiel); err != nil {
+			log.Println(err)
 		}
+
+		log.Println(spiel.User)
+		log.Println(spiel.Question)
+
+		return nil
 	}
 
 	return nil

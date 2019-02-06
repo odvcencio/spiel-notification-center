@@ -34,31 +34,29 @@ func GetQuestionByID(questionID int) (models.Question, error) {
 	return question, nil
 }
 
-func CheckForSpiel(videoID string) (bool, error) {
+func CheckForSpiel(videoID string) (models.Spiel, error) {
 	var spiel models.Spiel
 
 	db = connectToDB()
 	if err := db.Model(&spiel).
 		Where("video_id = ?", videoID).
+		Column("spiel.*").
+		Relation("User").
+		Relation("Question").
 		Select(); err != nil {
 		time.Sleep(5 * time.Second)
 
 		return CheckForSpiel(videoID)
 	}
 
-	return true, nil
+	return spiel, nil
 }
 
-func UpdateSpielWithVideoURL(videoURL, videoID string) error {
-	spiel := models.Spiel{
-		VideoID:  videoID,
-		VideoURL: videoURL,
-	}
-
+func UpdateSpielWithVideoURL(spiel models.Spiel) error {
 	db = connectToDB()
 	_, err := db.Model(&spiel).
-		Set("video_url = ?", videoURL).
-		Where("video_id = ?", videoID).
+		Column("video_url", "created_time").
+		WherePK().
 		Update()
 
 	if err != nil {
