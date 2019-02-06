@@ -1,6 +1,9 @@
 package database
 
-import "spiel/notification-center/models"
+import (
+	"spiel/notification-center/models"
+	"time"
+)
 
 func GetUserByID(userID string) (models.User, error) {
 	var user models.User
@@ -29,6 +32,21 @@ func GetQuestionByID(questionID int) (models.Question, error) {
 	}
 
 	return question, nil
+}
+
+func CheckForSpiel(videoID string) (bool, error) {
+	var spiel models.Spiel
+
+	db = connectToDB()
+	if err := db.Model(&spiel).
+		Where("video_id = ?", videoID).
+		Select(); err != nil {
+		time.Sleep(5 * time.Second)
+
+		return CheckForSpiel(videoID)
+	}
+
+	return true, nil
 }
 
 func UpdateSpielWithVideoURL(videoURL, videoID string) error {
