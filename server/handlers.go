@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"log"
 	"spiel/notification-center/database"
+	"spiel/notification-center/models"
+	"spiel/notification-center/tools/onesignal"
 	"time"
 
 	"github.com/labstack/echo"
@@ -60,8 +62,35 @@ func handleMuxMediaNotification(ctx echo.Context) error {
 			log.Println(err)
 		}
 
-		log.Println(spiel.User)
-		log.Println(spiel.Question)
+		log.Println(spiel.Question.User)
+
+		var spielNotification models.Notification
+
+		spielNotification.SpielID = spiel.ID
+		spielNotification.UserID = spiel.Question.UserID
+		spielNotification.Message = spiel.User.FirstName + " has answered your question!"
+
+		if err := database.InsertNotificationForSpiel(spielNotification); err != nil {
+			log.Println(err)
+		}
+
+		// Sending notification
+		onesignal.DefaultClient.SendPushNotification(onesignal.Notification{
+			Contents: map[string]string{
+				"en": spiel.User.FirstName + " has sent you a Spiel!",
+			},
+			Headings: map[string]string{
+				"en": "You have received a Spiel!",
+			},
+			Filters: []interface{}{
+				onesignal.Filter{
+					Field:    "tag",
+					Key:      "user_id",
+					Relation: "=",
+					Value:    spielNotification.UserID,
+				},
+			},
+		})
 
 		return nil
 	}

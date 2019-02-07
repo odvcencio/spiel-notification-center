@@ -43,6 +43,7 @@ func CheckForSpiel(videoID string) (models.Spiel, error) {
 		Column("spiel.*").
 		Relation("User").
 		Relation("Question").
+		Relation("Question.User").
 		Select(); err != nil {
 		time.Sleep(5 * time.Second)
 
@@ -60,6 +61,16 @@ func UpdateSpielWithVideoURL(spiel models.Spiel) error {
 		Update()
 
 	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func InsertNotificationForSpiel(notification models.Notification) error {
+	db = connectToDB()
+
+	if err := db.Insert(&notification); err != nil {
 		return err
 	}
 
