@@ -69,6 +69,7 @@ func handleMuxMediaNotification(ctx echo.Context) error {
 		spielNotification.SpielID = spiel.ID
 		spielNotification.UserID = spiel.Question.UserID
 		spielNotification.Message = spiel.User.FirstName + " has answered your question!"
+		spielNotification.CreatedTime = time.Now()
 
 		if err := database.InsertNotificationForSpiel(spielNotification); err != nil {
 			log.Println(err)

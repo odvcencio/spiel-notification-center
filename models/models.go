@@ -96,9 +96,10 @@ type Spiel struct {
 }
 
 type Notification struct {
-	ID      int    `json:"-"`
-	UserID  string `json:"-"`
-	Message string `json:"message"`
-	SpielID int    `json:"-"`
-	Spiel   Spiel  `json:"spiel" sql:",fk"`
+	ID          int       `json:"-"`
+	UserID      string    `json:"-"`
+	Message     string    `json:"message"`
+	SpielID     int       `json:"-"`
+	Spiel       Spiel     `json:"spiel" sql:",fk"`
+	CreatedTime time.Time `json:"created_time"`
 }
