@@ -8,6 +8,7 @@ import (
 	"spiel/notification-center/database"
 	"spiel/notification-center/models"
 	"spiel/notification-center/tools/onesignal"
+	"strings"
 	"time"
 
 	"github.com/labstack/echo"
@@ -74,10 +75,12 @@ func handleMuxMediaNotification(ctx echo.Context) error {
 			log.Println(err)
 		}
 
+		cleanName := strings.TrimSpace(spiel.User.FirstName)
+
 		// Sending notification
 		onesignal.DefaultClient.SendPushNotification(onesignal.Notification{
 			Contents: map[string]string{
-				"en": spiel.User.FirstName + " has sent you a Spiel!",
+				"en": cleanName + " has sent you a Spiel!",
 			},
 			Headings: map[string]string{
 				"en": "You have received a Spiel!",
