@@ -5,6 +5,8 @@ import (
 	"log"
 	"spiel/notification-center/database"
 	"spiel/notification-center/tools/onesignal"
+	tools "spiel/notification-center/tools/sendgrid"
+	"strings"
 
 	nsq "github.com/nsqio/go-nsq"
 )
@@ -31,6 +33,10 @@ func handleTopicQuestionToUser(message *nsq.Message) error {
 	question, err := database.GetQuestionByID(msg.QuestionID)
 	if err != nil {
 		return err
+	}
+
+	if strings.Contains(question.UserID, "@") {
+		tools.SendEmailPromptToWebUser(question.User, user)
 	}
 
 	// Sending notification
