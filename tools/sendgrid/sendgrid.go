@@ -21,7 +21,7 @@ func SendEmailPromptToWebUser(webUser, spieler models.User) {
     all the benefits we’ve worked hard to provide for you, and
     all our users! ` + spieler.FirstName + " " + spieler.LastName + `, ` + spieler.Title +
 		` at ` + spieler.Company + `,  has received
-    your question, download our app and signup so you can
+    your question, download our app and sign up so you can
     see ` + spieler.FirstName + `'s personalized video answer specifically
     for you.`
 	htmlContent := generateHTML(webUser, spieler)
@@ -301,7 +301,7 @@ func generateHTML(webUser, spieler models.User) string {
                       <div class="">
   	<!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px;"><![endif]-->
   	<div style="color:#9b9b9b;font-family:'Source Sans Pro', Tahoma, Verdana, Segoe, sans-serif;line-height:120%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px;">
-  		<div style="line-height:14px;font-family:'Source Sans Pro', Tahoma, Verdana, Segoe, sans-serif;font-size:12px;color:#9b9b9b;text-align:left;"><p style="margin: 0;line-height: 14px;text-align: center;font-size: 12px"><span style="font-size: 15px; line-height: 18px;">Congratulations, ` + webUser.FirstName + `!</span></p><p style="margin: 0;line-height: 14px;text-align: center;font-size: 12px">&#160;</p><p style="margin: 0;line-height: 14px;text-align: center;font-size: 12px"><span style="font-size: 14px; line-height: 16px;">You have taken the first step in joining Spiel, and receiving <br>all the benefits we’ve worked hard to provide for you, and <br>all our users!` + spieler.FirstName + " " + spieler.LastName + `, ` + spieler.Title + ` at ` + spieler.Company + `, has received <br>your question, download our app and signup so you can <br>see ` + spieler.FirstName + `'s personalized video answer specifically <br>for you.</span></p></div>
+  		<div style="line-height:14px;font-family:'Source Sans Pro', Tahoma, Verdana, Segoe, sans-serif;font-size:12px;color:#9b9b9b;text-align:left;"><p style="margin: 0;line-height: 14px;text-align: center;font-size: 12px"><span style="font-size: 15px; line-height: 18px;">Congratulations, ` + webUser.FirstName + `!</span></p><p style="margin: 0;line-height: 14px;text-align: center;font-size: 12px">&#160;</p><p style="margin: 0;line-height: 14px;text-align: center;font-size: 12px"><span style="font-size: 14px; line-height: 16px;">You have taken the first step in joining Spiel, and receiving <br>all the benefits we’ve worked hard to provide for you, and <br>all our users! ` + spieler.FirstName + " " + spieler.LastName + `, ` + spieler.Title + ` at ` + spieler.Company + `, has received <br>your question, download our app and sign up so you can <br>see ` + spieler.FirstName + `'s personalized video answer specifically <br>for you.</span></p></div>
   	</div>
   	<!--[if mso]></td></tr></table><![endif]-->
   </div>
