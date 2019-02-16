@@ -18,13 +18,12 @@ func SendEmailPromptToWebUser(webUser, spieler models.User) {
 	firstAndLast := fmt.Sprintf("%s %s", webUser.FirstName, webUser.LastName)
 
 	to := mail.NewEmail(firstAndLast, webUser.ID)
-	plainTextContent := `You have taken the first step in joining Spiel, and receiving
-    all the benefits we’ve worked hard to provide for you, and
-    all our users! ` + spieler.FirstName + " " + spieler.LastName + `, ` + spieler.Title +
-		` at ` + spieler.Company + `,  has received
-    your question, download our app and sign up so you can
-    see ` + spieler.FirstName + `'s personalized video answer specifically
-    for you.`
+	plainTextContent := `You have taken the first step in joining Spiel, ` +
+		`and receiving all the benefits we’ve worked hard to provide for you, and all our users! ` +
+		spieler.FirstName + " " + spieler.LastName + `, ` + spieler.Title +
+		` at ` + spieler.Company + `,  has received your question, ` +
+		`download our app and sign up so you can see ` +
+		spieler.FirstName + `'s personalized video answer specifically for you.`
 	htmlContent := generateHTML(webUser, spieler)
 	message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
 	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))

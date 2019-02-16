@@ -41,6 +41,9 @@ func handleTopicQuestionToUser(message *nsq.Message) error {
 
 	// Sending notification
 	onesignal.DefaultClient.SendPushNotification(onesignal.Notification{
+		Data: map[string]string{
+			"type": "question",
+		},
 		Contents: map[string]string{
 			"en": question.Question,
 		},
