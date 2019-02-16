@@ -101,5 +101,6 @@ type Notification struct {
 	Message     string    `json:"message"`
 	SpielID     int       `json:"-"`
 	Spiel       Spiel     `json:"spiel" sql:",fk"`
+	Type        string    `json:"type"`
 	CreatedTime time.Time `json:"created_time"`
 }
