@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"spiel/notification-center/database"
 	"spiel/notification-center/tools/onesignal"
@@ -42,7 +43,8 @@ func handleTopicQuestionToUser(message *nsq.Message) error {
 	// Sending notification
 	onesignal.DefaultClient.SendPushNotification(onesignal.Notification{
 		Data: map[string]string{
-			"type": "question",
+			"type":        "question",
+			"question_id": fmt.Sprintf("%d", question.ID),
 		},
 		Contents: map[string]string{
 			"en": question.Question,

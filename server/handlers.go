@@ -62,8 +62,6 @@ func handleMuxMediaNotification(ctx echo.Context) error {
 			log.Println(err)
 		}
 
-		log.Println(spiel.Question.User)
-
 		var spielNotification models.Notification
 
 		spielNotification.SpielID = spiel.ID
@@ -79,7 +77,8 @@ func handleMuxMediaNotification(ctx echo.Context) error {
 		// Sending notification
 		onesignal.DefaultClient.SendPushNotification(onesignal.Notification{
 			Data: map[string]string{
-				"type": "spiel",
+				"type":     "spiel",
+				"spiel_id": fmt.Sprintf("%d", spiel.ID),
 			},
 			Contents: map[string]string{
 				"en": spiel.User.FirstName + " has sent you a Spiel!",
