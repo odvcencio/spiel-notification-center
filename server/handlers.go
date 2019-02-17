@@ -77,8 +77,8 @@ func handleMuxMediaNotification(ctx echo.Context) error {
 		// Sending notification
 		onesignal.DefaultClient.SendPushNotification(onesignal.Notification{
 			Data: map[string]string{
-				"type":     "spiel",
-				"spiel_id": fmt.Sprintf("%d", spiel.ID),
+				"type": "spiel",
+				"id":   fmt.Sprintf("%d", spiel.ID),
 			},
 			Contents: map[string]string{
 				"en": spiel.User.FirstName + " has sent you a Spiel!",

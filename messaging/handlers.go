@@ -43,8 +43,8 @@ func handleTopicQuestionToUser(message *nsq.Message) error {
 	// Sending notification
 	onesignal.DefaultClient.SendPushNotification(onesignal.Notification{
 		Data: map[string]string{
-			"type":        "question",
-			"question_id": fmt.Sprintf("%d", question.ID),
+			"type": "question",
+			"id":   fmt.Sprintf("%d", question.ID),
 		},
 		Contents: map[string]string{
 			"en": question.Question,
