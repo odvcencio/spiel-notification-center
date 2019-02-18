@@ -103,7 +103,7 @@ func handleTopicSpielAssessment(message *nsq.Message) error {
 				Field:    "tag",
 				Key:      "user_id",
 				Relation: "=",
-				Value:    user.ID,
+				Value:    msg.UserID,
 			},
 		},
 	})
