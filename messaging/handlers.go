@@ -72,8 +72,8 @@ func handleTopicQuestionToUser(message *nsq.Message) error {
 func handleTopicSpielAssessment(message *nsq.Message) error {
 	// Message model
 	var msg struct {
-		AssessmentID int `json:"assessment_id"`
-		UserID       int `json:"user_id"`
+		AssessmentID int    `json:"assessment_id"`
+		UserID       string `json:"user_id"`
 	}
 
 	// Decoding data
