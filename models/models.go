@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/go-pg/pg/orm"
+)
 
 type User struct {
 	Company           string                   `json:"company"`
@@ -10,7 +14,8 @@ type User struct {
 	LastName          string                   `json:"last_name"`
 	Title             string                   `json:"title"`
 	ProfilePhotoURL   string                   `json:"profile_photo_url"`
-	CreatedTime       time.Time                `json:"join_date"`
+	CreatedTime       time.Time                `json:"-"`
+	FriendlyJoinDate  string                   `json:"friendly_join_date" sql:"-"`
 	ViewIndex         int                      `json:"view_index"`
 	AboutMe           string                   `json:"about_me"`
 	PhoneNumber       string                   `json:"phone_number"`
@@ -45,7 +50,7 @@ func (target *User) Merge(source User) User {
 	if target.Email != "" {
 		source.Email = target.Email
 	}
-	if target.ID != "" {
+	if target.ID != "" && target.ID != source.Email {
 		source.ID = target.ID
 	}
 
@@ -66,33 +71,65 @@ type Category struct {
 }
 
 type Question struct {
-	CreatedTime time.Time `json:"created_time"`
-	UserID      string    `json:"-"`
-	User        User      `json:"asker" sql:",fk"`
-	Question    string    `json:"question"`
-	Category    Category  `json:"category" sql:",fk"`
-	CategoryID  int       `json:"category_id"`
-	ID          int       `json:"id"`
+	Answered         bool      `json:"answered"`
+	CreatedTime      time.Time `json:"created_time"`
+	LocalCreatedTime string    `json:"local_time" sql:"-"`
+	UserID           string    `json:"-"`
+	User             User      `json:"asker" sql:",fk"`
+	Question         string    `json:"question"`
+	Category         Category  `json:"category" sql:",fk"`
+	CategoryID       int       `json:"category_id"`
+	ID               int       `json:"id"`
 }
 
 type AskUser struct {
 	tableName  struct{} `sql:"ask_user,alias:ask_user"`
-	QuestionID int
-	UserID     string
+	QuestionID int      `json:"-"`
+	Question   Question `json:"question" sql:",fk"`
+	UserID     string   `json:"-"`
+	User       User     `json:"user" sql:",fk"`
 }
 
 type Spiel struct {
-	User             User      `json:"spieler" sql:",fk"`
-	UserID           string    `json:"-"`
-	VideoURL         string    `json:"video_url"`
-	VideoID          string    `json:"-"`
-	Question         Question  `json:"question" sql:",fk"`
-	QuestionID       int       `json:"-"`
-	Category         Category  `json:"category" sql:",fk"`
-	CategoryID       int       `json:"-"`
-	LocalCreatedTime string    `json:"local_time" sql:"-"`
-	CreatedTime      time.Time `json:"created_time"`
-	ID               int       `json:"id"`
+	User             User              `json:"spieler" sql:",fk"`
+	UserID           string            `json:"-"`
+	VideoURL         string            `json:"video_url"`
+	VideoID          string            `json:"video_id"`
+	Question         Question          `json:"question" sql:",fk"`
+	QuestionID       int               `json:"-"`
+	Category         Category          `json:"category" sql:",fk"`
+	CategoryID       int               `json:"-"`
+	Assessable       bool              `json:"assessable" sql:"-"`
+	Assessments      []SpielAssessment `json:"-"`
+	LocalCreatedTime string            `json:"local_time" sql:"-"`
+	CreatedTime      time.Time         `json:"created_time"`
+	ID               int               `json:"id"`
+}
+
+type SpielAssessment struct {
+	ID          int       `json:"id"`
+	SpielID     int       `json:"-"`
+	Spiel       Spiel     `json:"-" sql:",fk"`
+	UserID      string    `json:"-"`
+	User        User      `json:"-" sql:",fk"`
+	CreatedTime time.Time `json:"created_time"`
+
+	// Relations
+	Choices []SpielAssessmentChoice `json:"choices" pg:"many2many:spiel_assessment_to_choices"`
+}
+
+type SpielAssessmentChoice struct {
+	ID       int    `json:"id"`
+	Name     string `json:"name"`
+	Selected bool   `json:"selected" sql:"-"`
+}
+
+type SpielAssessmentToChoice struct {
+	tableName    struct{}              `sql:"spiel_assessment_to_choices"`
+	Assessment   SpielAssessment       `json:"assessment" pg:"fk:spiel_assessment_id"`
+	AssessmentID int                   `sql:"spiel_assessment_id"`
+	Choice       SpielAssessmentChoice `json:"choice" pg:"fk:spiel_assessment_choice_id"`
+	ChoiceID     int                   `sql:"spiel_assessment_choice_id"`
 }
 
 type Notification struct {
@@ -103,4 +140,8 @@ type Notification struct {
 	Spiel       Spiel     `json:"spiel" sql:",fk"`
 	Type        string    `json:"type"`
 	CreatedTime time.Time `json:"created_time"`
+}
+
+func init() {
+	orm.RegisterTable((*SpielAssessmentToChoice)(nil))
 }

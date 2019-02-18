@@ -11,4 +11,10 @@ func SubscribeToTopics() {
 		topicQuestionToUser,
 		nsq.HandlerFunc(handleTopicQuestionToUser),
 	)
+
+	// Topic: Spiel Assessment
+	getConsumer(
+		topicSpielAssessment,
+		nsq.HandlerFunc(handleTopicSpielAssessment),
+	)
 }

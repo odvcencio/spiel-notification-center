@@ -76,3 +76,21 @@ func InsertNotificationForSpiel(notification models.Notification) error {
 
 	return nil
 }
+
+func GetSpielAssessmentByID(assessmentID int) (*models.SpielAssessment, error) {
+	db = connectToDB()
+
+	var assessment = &models.SpielAssessment{
+		ID: assessmentID,
+	}
+	if err := db.
+		Model(assessment).
+		WherePK().
+		Relation("Spiel").
+		Relation("User").
+		First(); err != nil {
+		return nil, err
+	}
+
+	return assessment, nil
+}
