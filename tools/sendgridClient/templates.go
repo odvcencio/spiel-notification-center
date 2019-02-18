@@ -1,43 +1,11 @@
-package tools
+package sendgridClient
 
 import (
-	"fmt"
-	"log"
-	"os"
 	"spiel/notification-center/models"
 	"strings"
-
-	sendgrid "github.com/sendgrid/sendgrid-go"
-	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )
 
-func SendEmailPromptToWebUser(webUser, spieler models.User) {
-	from := mail.NewEmail("Spiel", "info@tryspiel.com")
-	subject := fmt.Sprintf("Congratulations %s!", webUser.FirstName)
-
-	firstAndLast := fmt.Sprintf("%s %s", webUser.FirstName, webUser.LastName)
-
-	to := mail.NewEmail(firstAndLast, webUser.ID)
-	plainTextContent := `You have taken the first step in joining Spiel, ` +
-		`and receiving all the benefits we’ve worked hard to provide for you, and all our users! ` +
-		spieler.FirstName + " " + spieler.LastName + `, ` + spieler.Title +
-		` at ` + spieler.Company + `,  has received your question, ` +
-		`download our app and sign up so you can see ` +
-		spieler.FirstName + `'s personalized video answer specifically for you.`
-	htmlContent := generateHTML(webUser, spieler)
-	message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
-	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
-	response, err := client.Send(message)
-	if err != nil {
-		log.Println(err)
-	} else {
-		log.Println(response.StatusCode)
-		log.Println(response.Body)
-		log.Println(response.Headers)
-	}
-}
-
-func generateHTML(webUser, spieler models.User) string {
+func generateHTMLForWebQuestion(webUser, spieler models.User) string {
 	return `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head>
 	    <!--[if gte mso 9]><xml>
 	     <o:OfficeDocumentSettings>

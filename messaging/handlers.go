@@ -7,7 +7,7 @@ import (
 	"spiel/notification-center/database"
 	"spiel/notification-center/models"
 	"spiel/notification-center/tools/onesignal"
-	tools "spiel/notification-center/tools/sendgrid"
+	"spiel/notification-center/tools/sendgridClient"
 	"strings"
 	"time"
 
@@ -39,7 +39,7 @@ func handleTopicQuestionToUser(message *nsq.Message) error {
 	}
 
 	if strings.Contains(question.UserID, "@") {
-		tools.SendEmailPromptToWebUser(question.User, user)
+		sendgridClient.SendEmailPromptToWebUser(question.User, user)
 	}
 
 	// Sending notification

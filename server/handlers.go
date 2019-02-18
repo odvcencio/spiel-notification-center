@@ -8,10 +8,41 @@ import (
 	"spiel/notification-center/database"
 	"spiel/notification-center/models"
 	"spiel/notification-center/tools/onesignal"
+	"spiel/notification-center/tools/sendgridClient"
 	"time"
 
 	"github.com/labstack/echo"
 )
+
+func handleNewUser(ctx echo.Context) error {
+	// Read request body
+	reqData, err := ioutil.ReadAll(ctx.Request().Body)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	// Unmarshal request json
+	var dict echo.Map
+	if err := json.Unmarshal(reqData, &dict); err != nil {
+		log.Println(err)
+		return err
+	}
+
+	newUserEmail := dict["email"].(string)
+	newUserFirst := dict["first_name"].(string)
+	newUserLast := dict["last_name"].(string)
+
+	user := models.User{
+		Email:     newUserEmail,
+		FirstName: newUserFirst,
+		LastName:  newUserLast,
+	}
+
+	sendgridClient.SendEmailToFounders(user)
+
+	return nil
+}
 
 func handleMuxMediaNotification(ctx echo.Context) error {
 	type Request struct {
