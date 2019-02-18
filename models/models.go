@@ -133,13 +133,15 @@ type SpielAssessmentToChoice struct {
 }
 
 type Notification struct {
-	ID          int       `json:"-"`
-	UserID      string    `json:"-"`
-	Message     string    `json:"message"`
-	SpielID     int       `json:"-"`
-	Spiel       Spiel     `json:"spiel" sql:",fk"`
-	Type        string    `json:"type"`
-	CreatedTime time.Time `json:"created_time"`
+	ID                int             `json:"-"`
+	UserID            string          `json:"-"`
+	Message           string          `json:"message"`
+	SpielID           int             `json:"-"`
+	Spiel             Spiel           `json:"spiel" sql:",fk"`
+	SpielAssessmentID int             `json:"-"`
+	SpielAssessment   SpielAssessment `json:"assessment" sql:",fk"`
+	Type              string          `json:"type"`
+	CreatedTime       time.Time       `json:"created_time"`
 }
 
 func init() {

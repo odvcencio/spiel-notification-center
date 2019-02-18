@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"log"
 	"spiel/notification-center/database"
+	"spiel/notification-center/models"
 	"spiel/notification-center/tools/onesignal"
 	tools "spiel/notification-center/tools/sendgrid"
 	"strings"
+	"time"
 
 	nsq "github.com/nsqio/go-nsq"
 )
@@ -87,16 +89,29 @@ func handleTopicSpielAssessment(message *nsq.Message) error {
 		return err
 	}
 
+	var assessmentNotification models.Notification
+
+	assessmentNotification.SpielID = assessment.SpielID
+	assessmentNotification.UserID = msg.UserID
+	assessmentNotification.SpielAssessmentID = msg.AssessmentID
+	assessmentNotification.Message = assessment.User.FirstName + " has given you a Spiel assessment!"
+	assessmentNotification.Type = "assessment"
+	assessmentNotification.CreatedTime = time.Now()
+
+	if err := database.InsertNotificationForSpiel(assessmentNotification); err != nil {
+		log.Println(err)
+	}
+
 	// Sending notification
 	onesignal.DefaultClient.SendPushNotification(onesignal.Notification{
 		Data: map[string]string{
-			"type": "assessment",
+			"type": assessmentNotification.Type,
 		},
 		Contents: map[string]string{
-			"en": "Someone has assessed your Spiel!",
+			"en": assessment.User.FirstName + " has given you a Spiel assessment!",
 		},
 		Headings: map[string]string{
-			"en": assessment.User.FirstName + " has given you a Spiel assessment!",
+			"en": "Someone has assessed your Spiel!",
 		},
 		Filters: []interface{}{
 			onesignal.Filter{
