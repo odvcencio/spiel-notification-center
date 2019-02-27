@@ -20,7 +20,7 @@ type User struct {
 	AboutMe           string                   `json:"about_me"`
 	PhoneNumber       string                   `json:"phone_number"`
 	UserCategories    []UserCategory           `json:"-" sql:",fk"`
-	Categories        []map[string]interface{} `json:"user_categories" sql:"-"`
+	Categories        []map[string]interface{} `json:"user_categories,omitempty" sql:"-"`
 	ID                string                   `json:"id"`
 	QuestionsToAnswer []Question               `json:"-" sql:"many2many:ask_user,joinFK:user_id"`
 }
@@ -58,11 +58,11 @@ func (target *User) Merge(source User) User {
 }
 
 type UserCategory struct {
-	tableName  struct{} `sql:"user_categories,alias:user_category"`
-	UserID     string   `json:"-"`
-	User       User     `json:"-" sql:",fk"`
-	CategoryID int      `json:"-"`
-	Category   Category `json:"category" sql:",fk"`
+	tableName  struct{}  `sql:"user_categories,alias:user_category"`
+	UserID     string    `json:"-"`
+	User       *User     `json:"-" sql:",fk"`
+	CategoryID int       `json:"-"`
+	Category   *Category `json:"category,omitempty" sql:",fk"`
 }
 
 type Category struct {
@@ -75,47 +75,54 @@ type Question struct {
 	CreatedTime      time.Time `json:"created_time"`
 	LocalCreatedTime string    `json:"local_time" sql:"-"`
 	UserID           string    `json:"-"`
-	User             User      `json:"asker" sql:",fk"`
+	User             *User     `json:"asker,omitempty" sql:",fk"`
 	Question         string    `json:"question"`
-	Category         Category  `json:"category" sql:",fk"`
-	CategoryID       int       `json:"category_id"`
+	Category         *Category `json:"category,omitempty" sql:",fk"`
+	CategoryID       int       `json:"-"`
+	SpielsCount      int       `json:"spiels_count"`
 	ID               int       `json:"id"`
+
+	// Relations
+	Spiels   []Spiel  `json:"spiels,omitempty"`
+	Receiver *AskUser `json:"receiver,omitempty"`
 }
 
 type AskUser struct {
-	tableName  struct{} `sql:"ask_user,alias:ask_user"`
-	QuestionID int      `json:"-"`
-	Question   Question `json:"question" sql:",fk"`
-	UserID     string   `json:"-"`
-	User       User     `json:"user" sql:",fk"`
+	tableName  struct{}  `sql:"ask_user,alias:ask_user"`
+	QuestionID int       `json:"-"`
+	Question   *Question `json:"question,omitempty" sql:",fk"`
+	UserID     string    `json:"-"`
+	User       *User     `json:"user,omitempty" sql:",fk"`
 }
 
 type Spiel struct {
-	User             User              `json:"spieler" sql:",fk"`
+	User             *User             `json:"spieler,omitempty" sql:",fk"`
 	UserID           string            `json:"-"`
-	VideoURL         string            `json:"video_url"`
-	VideoID          string            `json:"video_id"`
-	Question         Question          `json:"question" sql:",fk"`
+	VideoURL         string            `json:"video_url,omitempty"`
+	VideoID          string            `json:"video_id,omitempty"`
+	Duration         float32           `json:"duration,omitempty"`
+	ThumbnailURL     string            `json:"thumbnail_url,omitempty"`
+	Question         *Question         `json:"question,omitempty" sql:",fk"`
 	QuestionID       int               `json:"-"`
-	Category         Category          `json:"category" sql:",fk"`
+	Category         *Category         `json:"category,omitempty" sql:",fk"`
 	CategoryID       int               `json:"-"`
-	Assessable       bool              `json:"assessable" sql:"-"`
+	Assessable       bool              `json:"assessable,omitempty" sql:"-"`
 	Assessments      []SpielAssessment `json:"-"`
-	LocalCreatedTime string            `json:"local_time" sql:"-"`
-	CreatedTime      time.Time         `json:"created_time"`
+	LocalCreatedTime string            `json:"local_time,omitempty" sql:"-"`
+	CreatedTime      *time.Time        `json:"created_time,omitempty"`
 	ID               int               `json:"id"`
 }
 
 type SpielAssessment struct {
 	ID          int       `json:"id"`
 	SpielID     int       `json:"-"`
-	Spiel       Spiel     `json:"-" sql:",fk"`
+	Spiel       *Spiel    `json:"-" sql:",fk"`
 	UserID      string    `json:"-"`
-	User        User      `json:"-" sql:",fk"`
+	User        *User     `json:"-" sql:",fk"`
 	CreatedTime time.Time `json:"created_time"`
 
 	// Relations
-	Choices []SpielAssessmentChoice `json:"choices" pg:"many2many:spiel_assessment_to_choices"`
+	Choices []SpielAssessmentChoice `json:"choices,omitempty" pg:"many2many:spiel_assessment_to_choices"`
 }
 
 type SpielAssessmentChoice struct {
@@ -125,23 +132,23 @@ type SpielAssessmentChoice struct {
 }
 
 type SpielAssessmentToChoice struct {
-	tableName    struct{}              `sql:"spiel_assessment_to_choices"`
-	Assessment   SpielAssessment       `json:"assessment" pg:"fk:spiel_assessment_id"`
-	AssessmentID int                   `sql:"spiel_assessment_id"`
-	Choice       SpielAssessmentChoice `json:"choice" pg:"fk:spiel_assessment_choice_id"`
-	ChoiceID     int                   `sql:"spiel_assessment_choice_id"`
+	tableName    struct{}               `sql:"spiel_assessment_to_choices"`
+	Assessment   *SpielAssessment       `json:"-" pg:"fk:spiel_assessment_id"`
+	AssessmentID int                    `sql:"spiel_assessment_id"`
+	Choice       *SpielAssessmentChoice `json:"-" pg:"fk:spiel_assessment_choice_id"`
+	ChoiceID     int                    `sql:"spiel_assessment_choice_id"`
 }
 
 type Notification struct {
-	ID                int             `json:"-"`
-	UserID            string          `json:"-"`
-	Message           string          `json:"message"`
-	SpielID           int             `json:"-"`
-	Spiel             Spiel           `json:"spiel" sql:",fk"`
-	SpielAssessmentID int             `json:"-"`
-	SpielAssessment   SpielAssessment `json:"assessment" sql:",fk"`
-	Type              string          `json:"type"`
-	CreatedTime       time.Time       `json:"created_time"`
+	ID                int              `json:"-"`
+	SpielAssessmentID int              `json:"-"`
+	SpielAssessment   *SpielAssessment `json:"assessment,omitempty" sql:",fk"`
+	UserID            string           `json:"-"`
+	Message           string           `json:"message"`
+	SpielID           int              `json:"-"`
+	Spiel             *Spiel           `json:"spiel,omitempty" sql:",fk"`
+	Type              string           `json:"type"`
+	CreatedTime       time.Time        `json:"created_time"`
 }
 
 func init() {
