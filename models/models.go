@@ -79,7 +79,7 @@ type Question struct {
 	Question         string    `json:"question"`
 	Category         *Category `json:"category,omitempty" sql:",fk"`
 	CategoryID       int       `json:"-"`
-	SpielsCount      int       `json:"spiels_count"`
+	SpielsCount      int       `json:"spiels_count" sql:"-"`
 	ID               int       `json:"id"`
 
 	// Relations
