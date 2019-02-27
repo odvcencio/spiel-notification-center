@@ -109,7 +109,7 @@ type Spiel struct {
 	Assessable       bool              `json:"assessable,omitempty" sql:"-"`
 	Assessments      []SpielAssessment `json:"-"`
 	LocalCreatedTime string            `json:"local_time,omitempty" sql:"-"`
-	CreatedTime      *time.Time        `json:"created_time,omitempty"`
+	CreatedTime      time.Time         `json:"created_time"`
 	ID               int               `json:"id"`
 }
 
