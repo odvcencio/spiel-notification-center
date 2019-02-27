@@ -39,7 +39,7 @@ func handleTopicQuestionToUser(message *nsq.Message) error {
 	}
 
 	if strings.Contains(question.UserID, "@") {
-		sendgridClient.SendEmailPromptToWebUser(question.User, user)
+		sendgridClient.SendEmailPromptToWebUser(*question.User, user)
 	}
 
 	// Sending notification
