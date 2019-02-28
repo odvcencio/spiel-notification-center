@@ -53,10 +53,10 @@ func CheckForSpiel(videoID string) (models.Spiel, error) {
 	return spiel, nil
 }
 
-func UpdateSpielWithVideoURL(spiel models.Spiel) error {
+func UpdateSpielWithVideoDetails(spiel models.Spiel) error {
 	db = connectToDB()
 	_, err := db.Model(&spiel).
-		Column("video_url", "created_time").
+		Column("video_url", "created_time", "thumbnail_url", "duration").
 		WherePK().
 		Update()
 

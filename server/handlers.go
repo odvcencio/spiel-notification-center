@@ -91,7 +91,7 @@ func handleMuxMediaNotification(ctx echo.Context) error {
 		spiel.ThumbnailURL = fmt.Sprintf("https://image.mux.com/%s/thumbnail.png?width=512&height=512&fit_mode=preserve", playbackID)
 		spiel.CreatedTime = time.Now()
 
-		if err := database.UpdateSpielWithVideoURL(spiel); err != nil {
+		if err := database.UpdateSpielWithVideoDetails(spiel); err != nil {
 			log.Println(err)
 		}
 
