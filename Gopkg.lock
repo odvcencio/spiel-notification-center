@@ -185,6 +185,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/go-pg/pg",
+    "github.com/go-pg/pg/orm",
     "github.com/labstack/echo",
     "github.com/nsqio/go-nsq",
     "github.com/rs/xid",

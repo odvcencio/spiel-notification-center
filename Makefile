@@ -29,4 +29,4 @@ docker-all:
 	@make docker-build
 	@make docker-tag
 	@make docker-push
-	@make docker-deploy
+	#@make docker-deploy
