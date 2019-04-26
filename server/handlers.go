@@ -94,7 +94,9 @@ func handleMuxMediaNotification(ctx echo.Context) error {
 		if err := database.UpdateSpielWithVideoDetails(spiel); err != nil {
 			log.Println(err)
 		}
-
+		if spiel.Question.UserID == spiel.UserID {
+			return nil
+		}
 		var spielNotification models.Notification
 
 		spielNotification.SpielID = spiel.ID
